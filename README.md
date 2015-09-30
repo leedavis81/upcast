@@ -26,8 +26,7 @@ Documentation for use
 Download with git
 `git clone https://github.com/leedavis81/upcast.git`
 
-Or via HTTP
-[Via Http](https://github.com/leedavis81/upcast/archive/master.zip)
+Or [Via Http](https://github.com/leedavis81/upcast/archive/master.zip)
 
 Navigate to the binary folder (bin) to find the cli.php file, and execute it.
 
@@ -35,15 +34,19 @@ Examples
 --------
 
 Show me the help menu
+
 `php cli.php -h`
 
 Give me a six month meeting schedule
+
 `php cli.php -m6`
 
 Give me a six month meeting schedule and print it to the screen
+
 `php cli.php -m6 --output=Stdout`
 
 Give me a twelve month meeting schedule and save it in the 'meetings' folder
+
 `php cli.php -m6 --output=File --output_folder=meetings`
 
 Running Tests
