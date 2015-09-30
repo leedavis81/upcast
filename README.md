@@ -37,6 +37,8 @@ Show me the help menu
 
 `php cli.php -h`
 
+![Help Menu](https://github.com/leedavis81/upcast/raw/master/example_help.png "Example Help Menu")
+
 Give me a six month meeting schedule
 
 `php cli.php -m6`
@@ -48,6 +50,8 @@ Give me a six month meeting schedule and print it to the screen
 Give me a twelve month meeting schedule and save it in the 'meetings' folder
 
 `php cli.php -m6 --output=File --output_folder=meetings`
+
+![Example Run](https://github.com/leedavis81/upcast/raw/master/example_run.png "Example Run")
 
 Running Tests
 -------------
