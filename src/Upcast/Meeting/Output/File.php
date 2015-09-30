@@ -36,6 +36,7 @@ class File extends AbstractOutput
             $iterator->next();
         }
 
+        fclose($handle);
         throw new NoticeException("All done. Check out the file at: \n\n\t" . $filePath);
     }
 }
