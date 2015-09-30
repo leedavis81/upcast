@@ -35,7 +35,6 @@ class Schedule
             $this->configuration->triggerError($e);
         }
 
-
         return true;
     }
 

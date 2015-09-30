@@ -48,7 +48,7 @@ class ScheduleConfig
 
         $this->errors = true;
 
-        if (php_sapi_name() === 'cli')
+        if (php_sapi_name() === 'cli' && APPLICATION_ENV !== 'testing')
         {
             try{
                 $this->parseCliArguments();
@@ -116,10 +116,11 @@ class ScheduleConfig
 
     /**
      * @param string $path
-     * @param bool $create - ensure the path if created
+     * @param bool $create - create the path
+     * @param bool $ensureExists - ensure the path exists (if we don't create it)
      * @throws ErrorException
      */
-    public function setOutputFolder($path, $create = true)
+    public function setOutputFolder($path, $create = true, $ensureExists = true)
     {
         if ($this->output !== self::OUTPUT_FILE)
         {
@@ -135,9 +136,16 @@ class ScheduleConfig
                     throw new ErrorException('Unable to create the given path for file output. Please ensure it\'s correct and has writable permissions');
                 }
                 $realPath = realpath($path);
+            } elseif ($ensureExists)
+            {
+                if (realpath($path) === false)
+                {
+                    throw new ErrorException('Output path doesn\'t exist');
+                }
             } else
             {
-                throw new ErrorException('Output path doesn\'t exist');
+                // Just set it, if write fails error will bubble up
+                $realPath = $path;
             }
         }
         $this->output_file_path = $realPath;

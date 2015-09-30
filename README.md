@@ -63,6 +63,6 @@ To do this, ensure you're in the root folder of the application (upcast) and run
 `composer install`
 `vendor/bin/phpunit`
 
-If you see the green bar, then tests are all passing.
+If you see the green bar, then tests are all passing. 
 
 

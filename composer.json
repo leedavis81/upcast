@@ -5,7 +5,7 @@
   "autoload": {
     "classmap": ["src/"],
     "psr-0": {
-      "Upcast\\": "library/",
+      "Upcast\\": "src/",
       "UpcastTests\\": "tests/"
     }
   },

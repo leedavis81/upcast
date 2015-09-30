@@ -13,9 +13,15 @@ class ErrorHandler
     /**
      * Handle an error
      * @param \Exception $e
+     * @throws \Exception
      */
     public function handle(\Exception $e)
     {
+        if (APPLICATION_ENV === 'testing')
+        {
+            // In a testing environment, don't gracefully print errors, rethrow them
+            throw $e;
+        }
         if ($e instanceof NoticeException)
         {
             echo PHP_EOL . "\033[32m " . $e->getMessage() . "\033[0m" .  PHP_EOL . PHP_EOL;
