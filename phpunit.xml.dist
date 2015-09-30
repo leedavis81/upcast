@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         verbose="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="true"
+         bootstrap="./tests/LeadrTests/Bootstrap.php">
+
+    <testsuites>
+        <testsuite name="Leadr Test Suite">
+            <directory>./tests/LeadrTests</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
