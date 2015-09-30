@@ -47,6 +47,8 @@ Give me a six month meeting schedule and print it to the screen
 
 `php cli.php -m6 --output=Stdout`
 
+![Example Stdout](https://github.com/leedavis81/upcast/raw/master/example_stdout.png "Example Stdout")
+
 Give me a twelve month meeting schedule and save it in the 'meetings' folder
 
 `php cli.php -m6 --output=File --output_folder=meetings`
