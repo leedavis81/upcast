@@ -3,7 +3,7 @@
     "phpunit/phpunit": "~4.1"
   },
   "autoload": {
-    "classmap": ["application/"],
+    "classmap": ["src/"],
     "psr-0": {
       "Upcast\\": "library/",
       "UpcastTests\\": "tests/"
