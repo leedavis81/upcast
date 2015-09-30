@@ -1,6 +1,12 @@
+Upcast Test
+===========
+
 The Upcast development team are required to have a mid month meeting in order to discuss the ongoing improvements and new features to the code base. 
 This meeting is planned for the 14th of every month. 
 Testing is also done on a monthly basis and should be done on the last day of the month.
+
+Rules
+-----
 
 If the 14th falls on a Saturday or Sunday then the mid month meeting should be arranged for the following Monday.
 
@@ -12,3 +18,23 @@ With this in mind, design a command line script that will write a CSV to file ou
 We would encourage you to not use any frameworks with this test.
 
 Please ensure all relevant documentation is supplied.
+
+
+Documentation for use
+---------------------
+
+
+
+Running Tests
+-------------
+
+Although it's suggested that no frameworks should be used, for testing PHPUnit is required. 
+To run the test suite you must first install this dependency. 
+To do this, ensure you're in the root folder of the application (upcast) and run the following commands:
+
+`composer install`
+`vendor/bin/phpunit`
+
+If you see the green bar, then tests are all passing.
+
+

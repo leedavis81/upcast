@@ -9,11 +9,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="true"
-         bootstrap="./tests/LeadrTests/Bootstrap.php">
+         bootstrap="./tests/UpcastTests/Bootstrap.php">
 
     <testsuites>
-        <testsuite name="Leadr Test Suite">
-            <directory>./tests/LeadrTests</directory>
+        <testsuite name="Upcast Test Suite">
+            <directory>./tests/UpcastTests</directory>
         </testsuite>
     </testsuites>
 

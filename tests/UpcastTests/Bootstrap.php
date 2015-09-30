@@ -1,7 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lee
- * Date: 30/09/15
- * Time: 11:12
- */
+
+if (! isset($loader)) {
+    throw new Exception('Unable to load autoload.php. Try running `php composer.phar install`');
+}

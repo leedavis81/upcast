@@ -29,14 +29,24 @@ class ScheduleConfig
      */
     protected $number_of_months;
 
+    /**
+     * An error handler. Only present when an error has occurred
+     * @var ErrorHandler $errorHandler
+     */
+    protected $errorHandler;
 
+    /**
+     * Create a configuration instance
+     * @throws ErrorException
+     */
     public function __construct()
     {
         // Set up the defaults
         $this->setNumberOfMonths(6);
         $this->setOutput(self::OUTPUT_FILE);
-
         $this->setOutputFolder(getcwd());
+
+        $this->errors = true;
 
         if (php_sapi_name() === 'cli')
         {
@@ -44,16 +54,28 @@ class ScheduleConfig
                 $this->parseCliArguments();
             } catch (\Exception $e)
             {
-                echo PHP_EOL . "\033[31m[ERROR]: " . $e->getMessage() . "\033[0m" .  PHP_EOL;
-                $this->printHelp();
+                $this->triggerError($e);
             }
         }
+
+        // No errors were generated
+        $this->errors = false;
+    }
+
+    /**
+     * Trigger an error. This method creates an errorHandler instance which we can use to check the object state.
+     * @param \Exception $e
+     */
+    public function triggerError(\Exception $e)
+    {
+        $this->errorHandler = new ErrorHandler();
+        $this->errorHandler->handle($e);
     }
 
     /**
      * Set the output mechanism to one of the allowed options
      * @param $output
-     * @throws \InvalidArgumentException
+     * @throws ErrorException
      */
     public function setOutput($output)
     {
@@ -61,7 +83,7 @@ class ScheduleConfig
 
         if (!defined('self::OUTPUT_' . strtoupper($output)))
         {
-            throw new \InvalidArgumentException('The output option must be set to either \'File\' or \'Stdout\'');
+            throw new ErrorException('The output option must be set to either \'File\' or \'Stdout\'');
         }
         $this->output = $output;
     }
@@ -69,13 +91,13 @@ class ScheduleConfig
     /**
      * Get the output adapter class name
      * @return string $className
-     * @throws \DomainException
+     * @throws ErrorException
      */
     public function getOutputAdapterClass()
     {
         if ($this->output === null)
         {
-            throw new \RuntimeException('Output mechanism hasn\'t yet been defined. Please use the setOutput() method.');
+            throw new ErrorException('Output mechanism hasn\'t yet been defined. Please use the setOutput() method.');
         }
 
         return '\\Upcast\\Meeting\\Output\\' . $this->output;
@@ -95,6 +117,7 @@ class ScheduleConfig
     /**
      * @param string $path
      * @param bool $create - ensure the path if created
+     * @throws ErrorException
      */
     public function setOutputFolder($path, $create = true)
     {
@@ -109,12 +132,12 @@ class ScheduleConfig
             {
                 if (!@mkdir($path, 0777, true))
                 {
-                    throw new \RuntimeException('Unable to create the given path for file output. Please ensure it\'s correct and has writable permissions');
+                    throw new ErrorException('Unable to create the given path for file output. Please ensure it\'s correct and has writable permissions');
                 }
                 $realPath = realpath($path);
             } else
             {
-                throw new \RuntimeException('Output path doesn\'t exist');
+                throw new ErrorException('Output path doesn\'t exist');
             }
         }
         $this->output_file_path = $realPath;
@@ -124,17 +147,18 @@ class ScheduleConfig
     /**
      * Get the output file path.
      * @return string
+     * @throws ErrorException
      */
     public function getOutputFilePath()
     {
         if ($this->output !== self::OUTPUT_FILE)
         {
-            throw new \RuntimeException('Output file path cannot be used unless using the output method of "' . self::OUTPUT_FILE . '"');
+            throw new ErrorException('Output file path cannot be used unless using the output method of "' . self::OUTPUT_FILE . '"');
         }
 
         if ($this->output_file_path === null)
         {
-            throw new \RuntimeException('Output folder path is unknown. Please set using the setOutputFolder() method.');
+            throw new ErrorException('Output folder path is unknown. Please set using the setOutputFolder() method.');
         }
 
         return $this->output_file_path;
@@ -158,6 +182,14 @@ class ScheduleConfig
         $this->number_of_months = (int) $number_of_months;
     }
 
+    /**
+     * Has a configuration error occurred
+     * @return boolean
+     */
+    public function hasErrors()
+    {
+        return $this->errorHandler instanceof ErrorHandler;
+    }
 
     /**
      * Parse cli arguments and set configuration from them
@@ -175,13 +207,12 @@ class ScheduleConfig
 
         if (isset($options['h']) || isset($options['help']))
         {
-            $this->printHelp();
-            return;
+            throw new NoticeException('Please see information on how to use this tool below', 1);
         }
 
         if (!isset($options['m']) && !isset($options['months']))
         {
-            throw new \Exception('You must supply a months value using either -m or --months');
+            throw new ErrorException('You must supply a months value using either -m or --months');
         }
 
         if (isset($options['m']) || isset($options['months']))
@@ -189,15 +220,15 @@ class ScheduleConfig
             $months = (isset($options['m'])) ? $options['m'] : $options['months'];
             if (!is_numeric($months))
             {
-                throw new \Exception('The months value provided is not a numeric');
+                throw new ErrorException('The months value provided is not a numeric');
             }
             if ($months < 1)
             {
-                throw new \Exception('The months value needs to be greater than zero');
+                throw new ErrorException('The months value needs to be greater than zero');
             }
             if ($months > 1200)
             {
-                throw new \Exception('You want "' . $months . '" months of output? Come on now, your being a bit silly. How about we try using "1200", Surely ten years will be enough for now?');
+                throw new ErrorException('You want "' . $months . '" months of output? Come on now, your being a bit silly. How about we try using "1200", Surely ten years will be enough for now?');
             }
             $this->setNumberOfMonths($months);
         }
@@ -214,35 +245,14 @@ class ScheduleConfig
     }
 
 
+
     /**
-     * Print out help information for CLI
+     * @return string
+     * @throws ErrorException
      */
-    protected function printHelp()
+    public function _toString()
     {
-        echo "\033[33m";
-        echo <<<EOF
-
-******************************************************************************
-**                        UPCAST DEV MEETING SCHEDULE TOOL                  **
-**                                                                          **
-**                        Build: 0.0.1alpha                                 **
-******************************************************************************
-
-Usage: php cli.php [-m]<months> [options]
-
-    -m, --months            Number of months to run the schedule for
-    --output                The output type to use. Can be 'File' or 'Stdout'
-    --output_folder         The output folder to use relative to the current working directory. Defaults to '.'
-    -h, --help              Show this help menu
-
-Examples:
-
-    php cli.php -m6
-    php cli.php -m6 --output=Stdout
-    php cli.php --months=12 --output=File --output_folder=/output
-
-
-EOF;
-        echo "\033[0m";
+        // Return a unique hash based on config settings. We can then use this to prevent duplication
+        return sha1(date('Ymd') . $this->output_file_path . $this->number_of_months . $this->output);
     }
 }

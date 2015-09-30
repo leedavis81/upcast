@@ -6,7 +6,7 @@ class Schedule
 {
 
     /**
-     * The schdule configuration object
+     * The schedule configuration object
      * @var ScheduleConfig $configuration
      */
     protected $configuration;
@@ -16,10 +16,27 @@ class Schedule
         $this->configuration = $configuration;
     }
 
+    /**
+     * Perform the output execution
+     * @return bool - true upon success, false upon failure
+     */
     public function execute()
     {
+        if ($this->configuration->hasErrors())
+        {
+            return false;
+        }
         $outputAdapter = $this->configuration->getOutputAdapterInstance();
-        $outputAdapter->output($this->getPeriodIterator());
+        try
+        {
+            $outputAdapter->output($this->getPeriodIterator());
+        } catch (\Exception $e)
+        {
+            $this->configuration->triggerError($e);
+        }
+
+
+        return true;
     }
 
     protected function getPeriodIterator()
