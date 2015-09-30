@@ -61,6 +61,7 @@ To run the test suite you must first install this dependency.
 To do this, ensure you're in the root folder of the application (upcast) and run the following commands:
 
 `composer install`
+
 `vendor/bin/phpunit`
 
 If you see the green bar, then tests are all passing. 
