@@ -4,7 +4,6 @@ namespace UpcastTests;
 /**
  * Base Upcast test case class
  * Class UpcastTestCase
- * @package LeadrTests
  */
 abstract class UpcastTestCase extends  \PHPUnit_Framework_TestCase
 {
