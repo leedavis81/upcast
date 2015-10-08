@@ -17,7 +17,7 @@ class ErrorHandler
      */
     public function handle(\Exception $e)
     {
-        if (APPLICATION_ENV === 'testing')
+        if (defined(APPLICATION_ENV) && APPLICATION_ENV === 'testing')
         {
             // In a testing environment, don't gracefully print errors, rethrow them
             throw $e;
