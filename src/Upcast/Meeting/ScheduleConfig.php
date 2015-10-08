@@ -50,11 +50,14 @@ class ScheduleConfig
 
         if (php_sapi_name() === 'cli' && APPLICATION_ENV !== 'testing')
         {
-            try{
-                $this->parseCliArguments();
-            } catch (\Exception $e)
+            if (!defined(APPLICATION_ENV) || APPLICATION_ENV !== 'testing')
             {
-                $this->triggerError($e);
+                try{
+                    $this->parseCliArguments();
+                } catch (\Exception $e)
+                {
+                    $this->triggerError($e);
+                }
             }
         }
 
