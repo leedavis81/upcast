@@ -50,7 +50,7 @@ class ScheduleConfig
 
         if (php_sapi_name() === 'cli')
         {
-            if (defined(APPLICATION_ENV) && APPLICATION_ENV === 'testing')
+            if (defined('APPLICATION_ENV') && APPLICATION_ENV === 'testing')
             {
                 $this->errors = false;
                 return;
